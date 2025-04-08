@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtConnect - Artwork Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #6B46C1;
+            --secondary-color: #EC4899;
+            --accent-color: #F59E0B;
+            --dark-bg: #0a0a1f;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #e0e0ff;
+            --glass-effect: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1f 0%, #1a1a3a 50%, #2a2a5a 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass {
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .artwork-container {
+            margin-top: 100px;
+            padding: 2rem;
+        }
+
+        .artwork-image {
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .artwork-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .artwork-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .artwork-details {
+            padding: 2rem;
+        }
+
+        .artwork-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #fff, #e0e0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .artwork-price {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .artist-profile {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .artist-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-glow {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.4);
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .rating {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            background: var(--dark-bg);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .chat-messages {
+            height: 320px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            background: var(--primary-color);
+            margin-left: auto;
+        }
+
+        .message.received {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .artwork-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .artwork-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="javascript:history.back()" class="btn btn-glow back-button animate__animated animate__fadeIn">
+        <i class="bi bi-arrow-left"></i> Back
+    </a>
+    
+    <!-- Artwork Details Section -->
+    <div class="container artwork-container">
+        <div class="row">
+            <!-- Left Column - Artwork Image -->
+            <div class="col-lg-6">
+                <div class="artwork-image glass animate__animated animate__fadeIn">
+                    <img src="OIP.jpg" alt="Digital Dreams">
+                </div>
+            </div>
+
+            <!-- Right Column - Artwork Details -->
+            <div class="col-lg-6">
+                <div class="artwork-details glass animate__animated animate__fadeIn">
+                    <h1 class="artwork-title">Digital Dreams</h1>
+                    
+
+                    
+
+                    <div class="artwork-price">$1,200</div>
+                    
+                    <p class="artwork-description">
+                        A mesmerizing blend of neon colors and geometric patterns that explores the intersection of technology and human consciousness. Created using cutting-edge digital techniques and inspired by cyberpunk aesthetics.
+                    </p>
+
+                    <!-- Artist Profile -->
+                    <div class="artist-profile">
+                        <img src="art.jpeg" alt="Maria Chen" class="artist-avatar">
+                        <div class="artist-info">
+                            <h3>Maria Chen</h3>
+                            <p>Digital Artist • 150+ Artworks</p>
+                        </div>
+                        <a class="btn-glow ms-auto" href="{% url 'artist_profile'%}">View Profile</a>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4">
+                        <button class="btn-glow flex-grow-1">Purchase Artwork</button>
+                        <a href="chat.html" class="btn-glow flex-grow-1">Chat with Artist</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="mb-4">Reviews</h2>
+                <div class="reviews-container">
+                    <!-- Review Card 1 -->
+                    <div class="review-card animate__animated animate__fadeIn">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center">
+                                <img src="reviewer1.jpg" alt="John Doe" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                <div>
+                                    <h5 class="mb-0">John Doe</h5>
+                                    <small class="text-muted">2 days ago</small>
+                                </div>
+                            </div>
+                            <div class="rating">
+                                ★★★★★ <span class="ms-2">5.0</span>
+                            </div>
+                        </div>
+                        <p>Absolutely stunning piece! The attention to detail and the way the colors blend together is mesmerizing. This artwork perfectly captures the essence of digital dreams.</p>
+                    </div>
+
+                    <!-- Review Card 2 -->
+                    <div class="review-card animate__animated animate__fadeIn">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center">
+                                <img src="reviewer2.jpg" alt="Jane Smith" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                <div>
+                                    <h5 class="mb-0">Jane Smith</h5>
+                                    <small class="text-muted">1 week ago</small>
+                                </div>
+                            </div>
+                            <div class="rating">
+                                ★★★★☆ <span class="ms-2">4.0</span>
+                            </div>
+                        </div>
+                        <p>The technical execution is flawless, and the concept is intriguing. Would love to see more works in this series.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Window -->
+    <div class="chat-window glass" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Chat with Maria Chen</h5>
+                <button class="btn-close btn-close-white" onclick="toggleChat()"></button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message received">
+                Hello! Thanks for your interest in my artwork. How can I help you?
+            </div>
+        </div>
+        <div class="chat-input">
+            <div class="input-group">
+                <input type="text" class="form-control bg-dark text-light border-0" placeholder="Type your message...">
+                <button class="btn btn-glow">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function viewArtistProfile() {
+            // Add your artist profile navigation logic here
+            window.location.href = 'artist-profile.html';
+        }
+
+        // Add animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__fadeInUp');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate__animated').forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

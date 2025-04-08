@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtConnect - Artist Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6B46C1;
+            --secondary-color: #EC4899;
+            --accent-color: #F59E0B;
+            --dark-bg: #0a0a1f;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #e0e0ff;
+            --glass-effect: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 10px rgba(236, 72, 153, 0.5);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1f 0%, #1a1a3a 50%, #2a2a5a 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass {
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--neon-glow);
+        }
+
+        .profile-header {
+            padding: 4rem 2rem;
+            background: linear-gradient(45deg, rgba(107, 70, 193, 0.2), rgba(236, 72, 153, 0.2));
+            border-radius: 0 0 50px 50px;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid var(--secondary-color);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+            margin-bottom: 2rem;
+        }
+
+        .artist-name {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #fff, var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .artwork-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .artwork-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            aspect-ratio: 1;
+        }
+
+        .artwork-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .artwork-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .artwork-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .artwork-card:hover .artwork-info {
+            transform: translateY(0);
+        }
+
+        .bio-section {
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bio-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Back button styles */
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: var(--secondary-color);
+            box-shadow: var(--neon-glow);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .back-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                padding: 2rem 1rem;
+            }
+            
+            .profile-image {
+                width: 150px;
+                height: 150px;
+            }
+
+            .artist-name {
+                font-size: 2rem;
+            }
+
+            .artwork-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .back-button {
+                top: 1rem;
+                right: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-header text-center">
+        <!-- Back button -->
+        <a href="javascript:history.back()" class="back-button animate__animated animate__fadeIn">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        
+        <img src="{{ artist_details.profile_photo.url }}" alt="Maria Chen" class="profile-image animate__animated animate__fadeIn">
+        <h1 class="artist-name animate__animated animate__fadeInUp">{{ user_artist.name }}</h1>
+        <p class="lead mb-4 animate__animated animate__fadeInUp">Digital Artist & Visual Storyteller</p>
+    </div>
+   
+    <div class="container">
+        <div class="bio-section glass animate__animated animate__fadeIn">
+            <h2 class="mb-4">About {{ user_artist.name }}</h2>
+            <p>{{ artist_details.bio }}</p>
+            <div class="tags mt-4">
+                <span class="tag">Digital Art</span>   
+                <span class="tag">Visual Design</span>
+                <span class="tag">3D Modeling</span>
+            </div>
+        </div>
+
+        <h2 class="mb-4">Featured Artworks</h2>
+        <div class="artwork-grid">
+            {% if artist_details_art %}
+                 {% for art in artist_details_art %}
+                        <div class="artwork-card glass animate__animated animate__fadeIn">
+                            <img src="{{ art.img.url }}" alt="Digital Dreams">
+                            <div class="artwork-info">
+                                <h3>{{ art.title }}</h3>
+                                <p>
+                                    {% if art.arttype == '0' %}
+                                        Painting
+                                    {% elif art.arttype == '1' %}
+                                        Sculpture
+                                    {% elif art.arttype == '2' %}
+                                        Digital
+                                    {% elif art.arttype == '3' %}
+                                        Doodling
+                                    {% else %}
+                                        Unknown
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+            {% else %}
+                <p>No art available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__fadeInUp');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate__animated').forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<div class="row g-4">
+{% if art_list %}
+        {% for art in art_list %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="art-card animate__animated animate__fadeIn">
+                        <div class="art-image">
+                            <img src="{{ art.img.url }}" alt="Digital Dreams">
+                        </div>
+                        
+                        <div class="art-info">
+                            <h3 class="art-title">{{ art.title }}</h3>
+                            <p class="art-description">{{ art.desc }}</p>
+                            <div class="art-price">{{ art.price }}</div>
+                            <div class="rating mb-3">
+                                    <span class="star">★</span>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'details' art.id %}"><button class="btn-outline-glow">Details</button></a>
+                                <!-- <button class=""></button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    {% endfor %}
+        {% else %}
+                <p>No art available.</p>
+        {% endif %}
+    </div>

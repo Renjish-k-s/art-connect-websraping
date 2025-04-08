@@ -1,0 +1,42 @@
+2025-03-26 12:59:04,205 - django.utils.autoreload - INFO - C:\Users\ASUS\Desktop\git_online_works\art\art-connect-management-system\artconnect\scraper\views.py changed, reloading.
+2025-03-26 13:00:29,806 - scraper.views - INFO - Attempting to scrape events for goa from https://insider.in/all-events-in-goa/art-%26-craft
+2025-03-26 13:00:30,702 - scrapy.utils.log - INFO - Scrapy 2.12.0 started (bot: scrapybot)
+2025-03-26 13:00:30,838 - scrapy.utils.log - INFO - Versions: lxml 5.3.1.0, libxml2 2.11.7, cssselect 1.2.0, parsel 1.10.0, w3lib 2.3.1, Twisted 24.11.0, Python 3.13.1 (tags/v3.13.1:0671451, Dec  3 2024, 19:06:28) [MSC v.1942 64 bit (AMD64)], pyOpenSSL 25.0.0 (OpenSSL 3.4.1 11 Feb 2025), cryptography 44.0.1, Platform Windows-11-10.0.26100-SP0
+2025-03-26 13:00:30,838 - scraper.views - INFO - Starting spider with URL: https://insider.in/all-events-in-goa/art-%26-craft
+2025-03-26 13:00:30,842 - scraper.views - INFO - Spider crawling completed successfully
+2025-03-26 13:00:30,866 - twisted - CRITICAL - Unhandled error in Deferred:
+2025-03-26 13:00:30,867 - twisted - CRITICAL - Unhandled error in Deferred:
+2025-03-26 13:00:30,869 - twisted - CRITICAL - 
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\twisted\internet\defer.py", line 2017, in _inlineCallbacks
+    result = context.run(gen.send, result)
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\scrapy\crawler.py", line 149, in crawl
+    self.spider = self._create_spider(*args, **kwargs)
+                  ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\scrapy\crawler.py", line 163, in _create_spider
+    return self.spidercls.from_crawler(self, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\scrapy\spiders\__init__.py", line 66, in from_crawler
+    spider = cls(*args, **kwargs)
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art-connect-management-system\artconnect\scraper\scraper\spiders\event_scrapper.py", line 19, in __init__
+    self.logger = logging.getLogger(self.__class__.__name__)
+    ^^^^^^^^^^^
+AttributeError: property 'logger' of 'EventScraper' object has no setter
+2025-03-26 13:00:30,871 - twisted - CRITICAL - 
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\twisted\internet\defer.py", line 2017, in _inlineCallbacks
+    result = context.run(gen.send, result)
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\scrapy\crawler.py", line 149, in crawl
+    self.spider = self._create_spider(*args, **kwargs)
+                  ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\scrapy\crawler.py", line 163, in _create_spider
+    return self.spidercls.from_crawler(self, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art\Lib\site-packages\scrapy\spiders\__init__.py", line 66, in from_crawler
+    spider = cls(*args, **kwargs)
+  File "C:\Users\ASUS\Desktop\git_online_works\art\art-connect-management-system\artconnect\scraper\scraper\spiders\event_scrapper.py", line 19, in __init__
+    self.logger = logging.getLogger(self.__class__.__name__)
+    ^^^^^^^^^^^
+AttributeError: property 'logger' of 'EventScraper' object has no setter
+2025-03-26 13:00:30,970 - scraper.views - ERROR - JSON loading error: Expecting value: line 1 column 1 (char 0)
+2025-03-26 13:02:01,791 - django.utils.autoreload - INFO - C:\Users\ASUS\Desktop\git_online_works\art\art-connect-management-system\artconnect\scraper\views.py changed, reloading.

@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtConnect - Artist Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #6B46C1;
+            --secondary-color: #EC4899;
+            --accent-color: #F59E0B;
+            --dark-bg: #0a0a1f;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #e0e0ff;
+            --glass-effect: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1f 0%, #1a1a3a 50%, #2a2a5a 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+        }
+
+        .profile-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            overflow: hidden;
+            margin-right: 2rem;
+        }
+
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .category-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .category-tag {
+            background: var(--primary-color);
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .artwork-section {
+            margin-top: 3rem;
+        }
+
+        .artwork-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .glass-form {
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .artwork-card {
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .artwork-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .btn-glow {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.4);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary-color);
+            color: var(--text-light);
+            box-shadow: 0 0 15px rgba(107, 70, 193, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Chat Button Styles */
+        .chat-button-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .chat-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(107, 70, 193, 0.6);
+            cursor: pointer;
+            position: relative;
+            color: white;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(107, 70, 193, 0.8);
+        }
+
+        .chat-bubble {
+            position: absolute;
+            right: 70px;
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover .chat-bubble {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Chat Modal Styles */
+        .chat-modal {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 450px;
+            background: linear-gradient(135deg, rgba(26, 26, 58, 0.95) 0%, rgba(42, 42, 90, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .chat-modal.visible {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 16px;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+        }
+
+        .user-message {
+            align-self: flex-end;
+        }
+
+        .artist-message {
+            align-self: flex-start;
+        }
+
+        .message-bubble {
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .user-message .message-bubble {
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .artist-message .message-bubble {
+            background: var(--glass-effect);
+            color: var(--text-light);
+            border-bottom-left-radius: 5px;
+        }
+
+        .timestamp {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .user-message .timestamp {
+            align-self: flex-end;
+        }
+
+        .artist-message .timestamp {
+            align-self: flex-start;
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .send-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-button-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .chat-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(107, 70, 193, 0.6);
+            cursor: pointer;
+            position: relative;
+            color: white;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(107, 70, 193, 0.8);
+        }
+
+        .chat-bubble {
+            position: absolute;
+            right: 70px;
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover .chat-bubble {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Chat Modal Styles */
+        .chat-modal {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 450px;
+            background: linear-gradient(135deg, rgba(26, 26, 58, 0.95) 0%, rgba(42, 42, 90, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .chat-modal.visible {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 16px;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+        }
+
+        .user-message {
+            align-self: flex-end;
+        }
+
+        .artist-message {
+            align-self: flex-start;
+        }
+
+        .message-bubble {
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .user-message .message-bubble {
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .artist-message .message-bubble {
+            background: var(--glass-effect);
+            color: var(--text-light);
+            border-bottom-left-radius: 5px;
+        }
+
+        .timestamp {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .user-message .timestamp {
+            align-self: flex-end;
+        }
+
+        .artist-message .timestamp {
+            align-self: flex-start;
+        }
+
+        .chat-input-container {
+            display: flex;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .send-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* New Styles for User List */
+        .chat-users-list {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .user-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-list-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .last-message {
+            font-size: 12px;
+            opacity: 0.7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+
+        .unread-badge {
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background: var(--secondary-color);
+            color: white;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+        }
+
+        .back-to-users {
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .back-to-users svg {
+            margin-right: 5px;
+        }
+
+        
+
+        /* Animation */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(107, 70, 193, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(107, 70, 193, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(107, 70, 193, 0);
+            }
+        }
+        
+    /* Order Details Styles */
+    .order-section {
+        margin-top: 3rem;
+    }
+    
+    .table {
+        color: var(--text-light);
+        border-collapse: separate;
+        border-spacing: 0 8px;
+        margin-top: 1rem;
+    }
+    
+    .table thead th {
+        border: none;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 12px 15px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .table tbody tr {
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.01);
+    }
+    
+    .table td {
+        padding: 12px 15px;
+        border: none;
+        vertical-align: middle;
+    }
+    
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .status-processing {
+        background-color: #3B82F6;
+        color: white;
+    }
+    
+    .status-shipped {
+        background-color: #8B5CF6;
+        color: white;
+    }
+    
+    .status-delivered {
+        background-color: #10B981;
+        color: white;
+    }
+    
+    .status-cancelled {
+        background-color: #EF4444;
+        color: white;
+    }
+    
+    .status-paid {
+        background-color: #10B981;
+        color: white;
+    }
+    
+    .status-refunded {
+        background-color: #F59E0B;
+        color: white;
+    }
+    
+    .btn-icon {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-icon:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+    }
+    
+    .edit-btn:hover {
+        color: var(--accent-color);
+    }
+    </style>
+</head>
+<body>
+
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="profile-container">
+        <div class="welcome-header animate__animated animate__fadeIn">
+            <h1 class="welcome-title">Artist Portfolio</h1>
+        </div>
+
+        <!-- Profile Header -->
+        <div class="profile-header animate__animated animate__fadeIn">
+            <div class="profile-photo">
+                <img id="profileImage" src="{{ details.0.profile_photo.url }}" alt="Artist Profile">
+            </div>
+            <div class="profile-info">
+                <h1 class="welcome-title" id="artistName">{{ results.0.name }}</h1>
+                <p id="artistBio"> {{ details.0.bio }}</p>
+                
+                <div class="category-tags" id="categoryTags">
+                    <span class="category-tag">Digital Art</span>
+                    <span class="category-tag">Painting</span>
+                    <span class="category-tag">Sculpture</span>
+                </div>
+
+                <div class="contact-info mt-3">
+                    <p><strong>Email:</strong> <span id="emailDisplay">{{ results.0.email }}</span></p>
+                    <p><strong>Phone:</strong> <span id="phoneDisplay">+91 {{ details.0.phone }}</span></p>
+                    <p><strong>Location:</strong> <span id="locationDisplay">{{ details.0.location }}</span></p>
+                    <p><strong>Instagram:</strong> <span id="instagramLink">{{ details.0.insta }}</span></p>
+                    <p><strong>Website:</strong> <a href="#" id="websiteLink" class="text-light">{{ details.0.website }}</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="glass-form animate__animated animate__fadeIn">
+            <h2 class="section-title">Upload New Artwork</h2>
+            <form enctype="multipart/form-data" method="POST" >
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Artwork Title</label>
+                    <input type="text" class="form-control" id="artworkTitle" name="title" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="artworkDescription" rows="3" name="desc"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Art Type</label>
+                    <select class="form-control" id="arttype" name="arttype">
+                        <option value="" disabled selected>Select type of image</option>
+                        <option value="0">Painting</option>
+                        <option value="1">Sculpture</option>
+                        <option value="2">Digital Art</option>
+                        <option value="3">Doodlings</option>
+                    </select>
+                </div>
+                
+                
+                <div class="mb-3">
+                    <label class="form-label">Price (₹)</label>
+                    <input type="number" class="form-control" id="artworkPrice" name="price" >
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Upload Image</label>
+                    <input type="file" class="form-control" id="artworkImage" accept="image/*" name="img">
+                </div>
+                <button type="submit" class="btn-glow">Upload Artwork</button>
+            </form>
+        </div>
+
+        <!-- Artwork Grid -->
+        <div class="artwork-section animate__animated animate__fadeIn">
+            <h2 class="section-title">My Artworks</h2>
+        
+            <!-- Unified Grid Container -->
+            <div class="artwork-grid" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+                
+                {% for art in art_list %}
+                <div class="artwork-card" style="width: 250px; height: 400px; border: 1px solid #ddd; overflow: hidden; text-align: center; padding: 10px; background-color: #222; color: #fff; border-radius: 10px;">
+                    <img src="{{ art.img.url }}" alt="{{ art.title }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+                    <div style="padding: 10px;">
+                        <h3 style="font-size: 16px; margin-bottom: 5px;">{{ art.title }}</h3>
+                        <p style="font-size: 14px; color: #ccc; margin-bottom: 5px;">{{ art.desc }}</p>
+                        <p style="font-size: 16px; font-weight: bold; color: #ffd700;">${{ art.price }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+        
+            </div>
+        </div>
+        
+        <!-- Order Details Section -->
+<div class="order-section animate__animated animate__fadeIn">
+    <h2 class="section-title">Order Management</h2>
+    <!-- <button id="viewOrdersBtn" class="btn-glow mb-4">View Order Details</button> -->
+    
+    <div id="orderTableContainer"  class="glass-form">
+        <div class="table-responsive">
+            {% if orders %}
+
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th>Buyer Name</th>
+                        <th>Buyer Email</th>
+                        <th>Product Title</th>
+                        <th>Price</th>
+
+                        
+                        <th>Payment</th>
+                        <th>Delivery Date</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sample data, replace with your actual data -->
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.buyer_name }}</td>
+                        <td>{{ order.buyer_email }}</td>
+                        <td>{{ order.product_title }}</td>
+                        <td>{{ order.price }}</td>
+                        <td><span class="status-badge status-paid">Paid</span></td>
+                    
+                        <!-- Delivery Date Input -->
+                        <td>
+                        {% if order.del_date %}
+                            <input type="date" name="date_delivery" value="{{ order.del_date }}" readonly>
+                        {% else %}
+                            <form action="{% url 'update_delivery_date' order.order_id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="date" name="date_delivery" required>
+                        {% endif %}
+                        </td>
+                    
+                        <!-- Submit Button -->
+                        <td>
+                                <button type="submit">Update Date</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+
+                    
+                </tbody>
+            </table>
+            {% else %}
+    <p>No orders found for your products.</p>
+{% endif %}
+        </div>
+    </div>
+</div>
+    </div>
+
+    <div class="chat-button-container">
+        <button id="chatButton" class="chat-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span class="chat-bubble">Artist Messages</span>
+        </button>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="chat-modal">
+        <!-- User List View -->
+        <div id="userListView">
+            <div class="chat-header">
+                <h3>Messages</h3>
+                <button id="closeChat" class="close-button">×</button>
+            </div>
+            <div class="chat-users-list" id="chatUsersList">
+                <!-- User list will be populated here -->
+            </div>
+        </div>
+
+        <!-- Chat View (initially hidden) -->
+        <div id="chatView" style="display: none; height: 100%; flex-direction: column;">
+            <div class="chat-header">
+                <button class="back-to-users" id="backToUsers">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back
+                </button>
+                <h3 id="currentChatUser">User Name</h3>
+                <button id="closeChatView" class="close-button">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be populated here -->
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="messageInput" placeholder="Type your message...">
+                <button id="sendMessage" class="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const chatButton = document.getElementById('chatButton');
+            const chatModal = document.getElementById('chatModal');
+            const closeChat = document.getElementById('closeChat');
+            const userListView = document.getElementById('userListView');
+            const chatView = document.getElementById('chatView');
+            const backToUsers = document.getElementById('backToUsers');
+            const closeChatView = document.getElementById('closeChatView');
+            const chatUsersList = document.getElementById('chatUsersList');
+            const currentChatUser = document.getElementById('currentChatUser');
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendMessage = document.getElementById('sendMessage');
+            
+            let currentChatUserId = null;
+            
+            // Fetch and populate user list
+            function populateUserList() {
+                fetch('/get_user_list/')
+                    .then(response => response.json())
+                    .then(data => {
+                        chatUsersList.innerHTML = '';
+                        
+                        data.users.forEach(user => {
+                            const userHTML = `
+                                <div class="user-list-item" data-user-id="${user.id}">
+                                    <div class="user-avatar">${user.avatar}</div>
+                                    <div class="user-info">
+                                        <div class="user-name">${user.name}</div>
+                                        <div class="last-message">${user.last_message}</div>
+                                    </div>
+                                    <div class="message-time">${user.time}</div>
+                                    ${user.unread > 0 ? `<div class="unread-badge">${user.unread}</div>` : ''}
+                                </div>
+                            `;
+                            
+                            chatUsersList.innerHTML += userHTML;
+                        });
+                        
+                        // Add click event to each user
+                        const userItems = document.querySelectorAll('.user-list-item');
+                        userItems.forEach(item => {
+                            item.addEventListener('click', function() {
+                                const userId = parseInt(this.getAttribute('data-user-id'));
+                                openChatWithUser(userId);
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching user list:', error);
+                        alert('Failed to load user list');
+                    });
+            }
+            
+            // Open chat with specific user
+            function openChatWithUser(userId) {
+                currentChatUserId = userId;
+                
+                // Fetch messages for this user
+                fetch(`/get_user_messages/${userId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update user name in header
+                        const userItem = document.querySelector(`.user-list-item[data-user-id="${userId}"]`);
+                        const userName = userItem.querySelector('.user-name').textContent;
+                        currentChatUser.textContent = userName;
+                        currentChatUser.setAttribute('data-user-id', userId);
+                        
+                        // Populate chat messages
+                        populateChatMessages(data.messages);
+                        
+                        // Show chat view, hide user list
+                        userListView.style.display = 'none';
+                        chatView.style.display = 'flex';
+                        
+                        // Scroll to bottom of messages
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching messages:', error);
+                        alert('Failed to load messages');
+                    });
+            }
+            
+            // Populate chat messages
+            function populateChatMessages(messages) {
+                chatMessages.innerHTML = '';
+                
+                messages.forEach(msg => {
+                    const messageClass = msg.sender === currentChatUserId ? 'user-message' : 'artist-message';
+                    
+                    const messageHTML = `
+                        <div class="message ${messageClass}">
+                            <div class="message-bubble">${msg.content}</div>
+                            <div class="timestamp">${msg.timestamp}</div>
+                        </div>
+                    `;
+                    
+                    chatMessages.innerHTML += messageHTML;
+                });
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Send a new message
+            function sendUserMessage() {
+                const message = messageInput.value.trim();
+                if (message === '' || !currentChatUserId) return;
+                
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('receiver_id', currentChatUserId);
+                formData.append('content', message);
+                
+                fetch('/send_message/', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Add message to chat
+                    const messageHTML = `
+                        <div class="message artist-message">
+                            <div class="message-bubble">${message}</div>
+                            <div class="timestamp">${data.message.timestamp}</div>
+                        </div>
+                    `;
+                    
+                    chatMessages.innerHTML += messageHTML;
+                    
+                    // Clear input
+                    messageInput.value = '';
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                    alert('Failed to send message');
+                });
+            }
+            
+            // Event Listeners
+            chatButton.addEventListener('click', function() {
+                chatModal.classList.toggle('visible');
+                populateUserList(); // Refresh user list when opening
+            });
+            
+            closeChat.addEventListener('click', function() {
+                chatModal.classList.remove('visible');
+            });
+            
+            closeChatView.addEventListener('click', function() {
+                chatModal.classList.remove('visible');
+            });
+            
+            backToUsers.addEventListener('click', function() {
+                chatView.style.display = 'none';
+                userListView.style.display = 'block';
+                populateUserList(); // Refresh user list when going back
+            });
+            
+            sendMessage.addEventListener('click', sendUserMessage);
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendUserMessage();
+                }
+            });
+            
+            // Initialize
+            populateUserList();
+        });
+    </script>
+</body>
+</html>

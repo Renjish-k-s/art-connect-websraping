@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art Exhibitions</title>
+</head>
+<body>
+    <h1>Art Exhibitions in {{ city }}</h1>
+
+    <form method="GET" action="{% url 'scrape_events' %}">
+        <label for="city">Enter City:</label>
+        <input type="text" id="city" name="num" placeholder="bengaluru">
+        <button type="submit">Search</button>
+    </form>
+
+    <button onclick="location.reload();">Refresh Data</button>
+
+    {% if events %}
+        <ul>
+            {% for event in events %}
+            <li>
+                <h3>{{ event.head }}</h3>
+                {% if event.image_url %}
+                    <img src="{{ event.image_url }}" alt="Event Image" width="200">
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>🔄 Fetching events... Please refresh after a few seconds.</p>
+    {% endif %}
+</body>
+</html>

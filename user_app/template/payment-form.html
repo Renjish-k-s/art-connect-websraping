@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: #f7fafc;
+            color: #1a1f36;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100%;
+        }
+        
+        .header {
+            padding: 24px;
+            background-color: #fff;
+            border-bottom: 1px solid #e3e8ee;
+            text-align: center;
+        }
+        
+        .logo {
+            height: 32px;
+            width: auto;
+            background-color: #635bff;
+            color: white;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .checkout-container {
+            max-width: 1040px;
+            width: 100%;
+            margin: 40px auto;
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .payment-form {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .product-summary {
+            margin-right: 40px;
+            flex: 1;
+            max-width: 500px;
+        }
+        
+        .form-header {
+            margin-bottom: 30px;
+        }
+        
+        .form-header h2 {
+            color: #1a1f36;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-row {
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1a1f36;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e3e8ee;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: white;
+        }
+        
+        input:focus, select:focus {
+            border-color: #635bff;
+            outline: none;
+            box-shadow: 0 0 0 1px #635bff;
+        }
+        
+        .card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .card-number {
+            grid-column: 1 / span 2;
+        }
+        
+        .card-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 25px;
+            background-color: #f7fafc;
+            border-radius: 4px;
+        }
+        
+        .submit-btn {
+            background-color: #635bff;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #5851db;
+        }
+        
+        .form-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 14px;
+            color: #697386;
+        }
+        
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: #697386;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .secure-badge:before {
+            content: "🔒";
+            margin-right: 5px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 240px;
+            background-color: #f7fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-details {
+            padding: 24px;
+        }
+        
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .product-description {
+            color: #697386;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .price-summary {
+            background-color: #f7fafc;
+            border-radius: 6px;
+            padding: 24px;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #697386;
+        }
+        
+        .price-total {
+            font-weight: 600;
+            border-top: 1px solid #e3e8ee;
+            padding-top: 12px;
+            margin-top: 12px;
+            color: #1a1f36;
+            font-size: 16px;
+        }
+        
+        .footer {
+            padding: 24px;
+            background-color: #fff;
+            border-top: 1px solid #e3e8ee;
+            text-align: center;
+            font-size: 14px;
+            color: #697386;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .footer-link {
+            color: #697386;
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            color: #635bff;
+        }
+        
+        /* Success overlay styles */
+        .success-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 100;
+        }
+        
+        .success-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #4bb71b;
+            stroke-miterlimit: 10;
+            box-shadow: 0 0 0 #4bb71b;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+            margin-bottom: 20px;
+        }
+        
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #4bb71b;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        .success-message {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1f36;
+            margin-bottom: 10px;
+        }
+        
+        .success-redirect {
+            font-size: 16px;
+            color: #697386;
+        }
+        
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+        
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0 0 0 30px #4bb71b;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .checkout-container {
+                flex-direction: column;
+                align-items: center;
+                margin: 20px auto;
+            }
+            
+            .product-summary {
+                margin-right: 0;
+                margin-bottom: 24px;
+                width: 100%;
+                max-width: 500px;
+            }
+            
+            .payment-form {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">Stripetest.com</div>
+        </header>
+        
+        <main class="main-content">
+            <div class="checkout-container">
+                <div class="product-summary">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="{{ art.img.url }}" alt="{{ art.title }}">
+                        </div>
+                        <div class="product-details">
+                            <div class="product-name">{{ art.title }}</div>
+                            <div class="product-description">{{ art.desc }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="price-summary">
+                        <div class="price-row">
+                            <span>Subtotal</span>
+                            <span>₹{{ art.price }}</span>
+                        </div>
+                        <div class="price-row price-total">
+                            <span>Total</span>
+                            <span>₹{{ art.price }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="payment-form">
+                    <div class="form-header">
+                        <h2>Payment details</h2>
+                    </div>
+                    
+                    <form id="payment-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ art.id }}" name="product_id">
+                        
+                        <div class="form-section">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" placeholder="Email address" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Name on card</label>
+                                    <input type="text" id="name" name="name" placeholder="Name on card" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group card-number">
+                                    <label for="card">Card information</label>
+                                    <input type="text" id="card" name="card" placeholder="1234 1234 1234 1234" required>
+                                </div>
+                            </div>
+                            
+                            <div class="card-details">
+                                <div class="form-group">
+                                    <input type="text" id="expiry" name="expiry" placeholder="MM / YY" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input type="text" id="cvv" name="cvv" placeholder="CVC" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="address">Billing address</label>
+                                    <input type="text" id="address" name="address" placeholder="Address" required>
+                                </div>
+                            </div>
+                        
+                            <div class="card-details">
+                                <div class="form-group">
+                                    <input type="text" id="zip" name="zip" placeholder="ZIP code" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <select id="country" name="country" required>
+                                        <option value="US">United States</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="UK">United Kingdom</option>
+                                        <option value="AU">Australia</option>
+                                        <option value="IN" selected>India</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Pay ₹{{ art.price }}</button>
+                        
+                        <div class="form-footer">
+                            <div class="secure-badge">Secure payment processing</div>
+                            <p>Your payment information is processed securely. We do not store credit card details.</p>
+                        </div>
+                    </form>
+                    
+                    <!-- Success overlay -->
+                    <div class="success-overlay" id="successOverlay">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                        <div class="success-message">Payment Successful!</div>
+                        <div class="success-redirect" id="redirectText">Redirecting in 3 seconds...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="#" class="footer-link">Terms</a>
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            <div>© 2025 ACME Inc. All rights reserved.</div>
+        </footer>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Extract card number to just get last 4 digits for security
+            const cardNumber = document.getElementById('card').value;
+            const lastFour = cardNumber.slice(-4);
+            formData.append('card_last_four', lastFour);
+            
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Send data to server
+            fetch('{% url "process_payment" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    // Don't set Content-Type when using FormData
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show success overlay
+                    const successOverlay = document.getElementById('successOverlay');
+                    successOverlay.classList.add('show');
+                    
+                    // Countdown for redirect
+                    let countdown = 3;
+                    const redirectText = document.getElementById('redirectText');
+                    
+                    const countdownInterval = setInterval(function() {
+                        countdown--;
+                        if (countdown <= 0) {
+                            clearInterval(countdownInterval);
+                            window.location.href = data.redirect_url;
+                        } else {
+                            redirectText.textContent = `Redirecting in ${countdown} seconds...`;
+                        }
+                    }, 1000);
+                } else {
+                    // Handle error response
+                    alert('Payment failed: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred during payment processing. Please try again.');
+            });
+        });
+    });
+    </script>
+</body>
+</html>

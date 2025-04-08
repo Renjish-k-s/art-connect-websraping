@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtConnect - Artwork Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6B46C1;
+            --secondary-color: #EC4899;
+            --accent-color: #F59E0B;
+            --dark-bg: #0a0a1f;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-light: #e0e0ff;
+            --glass-effect: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 10px rgba(236, 72, 153, 0.5);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a1f 0%, #1a1a3a 50%, #2a2a5a 100%);
+            min-height: 100vh;
+            color: var(--text-light);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass {
+            background: var(--glass-effect);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        .artwork-container {
+            margin-top: 100px;
+            padding: 2rem;
+        }
+
+        .artwork-image {
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .artwork-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .artwork-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .artwork-details {
+            padding: 2rem;
+        }
+
+        .artwork-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #fff, #e0e0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .artwork-price {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .artist-profile {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .artist-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-glow {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.4);
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .rating {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            background: var(--dark-bg);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            z-index: 1000;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 15px 15px 0 0;
+        }
+
+        .chat-messages {
+            height: 320px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            background: var(--primary-color);
+            margin-left: auto;
+        }
+
+        .message.received {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .artwork-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .artwork-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        /* Improved Back button style */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(107, 70, 193, 0.4);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(107, 70, 193, 0.6);
+        }
+        
+        .back-btn:active {
+            transform: translateY(1px);
+        }
+
+                /* Back button styles */
+        .back-button {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.7rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: var(--secondary-color);
+            box-shadow: var(--neon-glow);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .back-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover i {
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+<a href="javascript:history.back()" class="back-button animate__animated animate__fadeIn">
+    <i class="fas fa-arrow-left"></i> Back
+</a>
+
+    <!-- Artwork Details Section -->
+    <div class="container artwork-container">
+        <div class="row">
+            <!-- Left Column - Artwork Image -->
+            <div class="col-lg-6">
+                <div class="artwork-image glass animate__animated animate__fadeIn">
+                    <img src="{{ art.img.url }}" alt="Digital Dreams">
+                </div>
+            </div>
+
+            <!-- Right Column - Artwork Details -->
+            <div class="col-lg-6">
+                <div class="artwork-details glass animate__animated animate__fadeIn">
+                    <h1 class="artwork-title">{{ art.title }}</h1>
+                    
+
+                    
+
+                    <div class="artwork-price">${{ art.price }}</div>
+                    
+                    <p class="artwork-description">
+                        {{ art.desc }}
+                    </p>
+
+                    <!-- Artist Profile -->
+                    <div class="artist-profile">
+                        <!-- <img src="art.jpeg" alt="Maria Chen" class="artist-avatar"> -->
+                        <div class="artist-info">
+                            <h3>{{ user_artist.name }}</h3>
+                            <p>Digital Artist • 150+ Artworks</p>
+                        </div>
+                        <a class="btn-glow ms-auto" style="text-decoration: none;" href="{% url 'artist_profile' user_artist.id %}">View Profile</a>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4">
+
+                        {% if art.status == "1" %}
+                        <a class="btn-glow flex-grow-1" href="{% url 'paymentpage' art.id %}" style="text-decoration: none; background-color: green; color: white;">Buy</a>
+                    {% else %}
+                        <span class="btn-glow flex-grow-1" style="text-decoration: none; background-color: red; color: white; padding: 10px; border-radius: 5px;">Sold out</span>
+                    {% endif %}
+                    
+
+                        <a style="text-decoration: none;" class="btn-glow flex-grow-1" href="{% url 'chatsystem' user_artist.id %}">Chat</a>
+
+                        <a href="{% url 'reviewpage' art.id %}" style="text-decoration: none;" class="btn-glow flex-grow-1">Review</a>
+
+                        <a href="{% url 'addtocart' art.id %}" style="text-decoration: none;" class="btn-glow flex-grow-1">Cart</a>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h2 class="mb-4">Reviews</h2>
+                <div class="reviews-container">
+                    <!-- Review Card 1 -->
+                    {% for review, user in reviews_with_users %}
+                        <div class="review-card animate__animated animate__fadeIn">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <!-- <img src="" alt="{{ user.name }}" class="rounded-circle me-3" style="width: 50px; height: 50px;"> -->
+                                    <div>
+                                        <h5 class="mb-0">{{ user.name }}</h5>
+                                        <small class="text-muted">{{ review.date }}</small>
+                                    </div>
+                                </div>
+                                <div class="rating">
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= review.rating|default:0|floatformat %}
+                                            ★
+                                        {% else %}
+                                            ☆
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="ms-2">{{ review.rating }}/5</span>
+                                </div>
+                            </div>
+                            <h6 class="fw-bold">{{ review.rev_title }}</h6>
+                            <p>{{ review.rev_body }}</p>
+                        </div>
+                    {% empty %}
+                        <p>No reviews yet.</p>
+                    {% endfor %}
+                    
+
+                    <!-- Review Card 2 -->
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Window -->
+    <div class="chat-window glass" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Chat with Maria Chen</h5>
+                <button class="btn-close btn-close-white" onclick="toggleChat()"></button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message received">
+                Hello! Thanks for your interest in my artwork. How can I help you?
+            </div>
+        </div>
+        <div class="chat-input">
+            <div class="input-group">
+                <input type="text" class="form-control bg-dark text-light border-0" placeholder="Type your message..." id="messageInput" onkeypress="sendOnEnter(event)">
+                <button class="btn btn-glow" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function viewArtistProfile() {
+            // Add your artist profile navigation logic here
+            window.location.href = 'artist-profile.html';
+        }
+
+        function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    
+    if (message) {
+        const chatMessages = document.getElementById('chatMessages');
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message sent';
+        messageElement.textContent = message;
+        chatMessages.appendChild(messageElement);
+        
+        // Auto-scroll to the bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Clear input
+        messageInput.value = '';
+        
+        // Simulate artist response after a delay
+        setTimeout(() => {
+            const responseElement = document.createElement('div');
+            responseElement.className = 'message received';
+            responseElement.textContent = "Thank you for your message! I'll get back to you soon.";
+            chatMessages.appendChild(responseElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 1000);
+    }
+}
+
+function sendOnEnter(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+        // Add animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__fadeInUp');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate__animated').forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

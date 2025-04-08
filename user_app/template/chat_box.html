@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+        
+        .chat-header {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .doctor-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .doctor-info {
+            flex: 1;
+        }
+        
+        .doctor-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .doctor-status {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+        
+        .doctor-message {
+            align-self: flex-start;
+            background-color: #e9edf0;
+            color: #333;
+            border-top-left-radius: 3px;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: #3498db;
+            color: white;
+            border-top-right-radius: 3px;
+        }
+        
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .chat-input input:focus {
+            border-color: #3498db;
+        }
+        
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+        
+        .send-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .message-date {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="doctor-avatar">👨‍⚕️</div>
+            <div class="doctor-info">
+                <div class="doctor-name">{% if doctor %}Dr. {{ doctor.name }}{% else %}Doctor{% endif %}</div>
+                <div class="doctor-status">Online</div>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message-date">Today</div>
+            
+            {% for message in messages %}
+                {% if message.sender_id == user_id %}
+                    <div class="message user-message">
+                        {{ message.content }}
+                        <div class="message-time">{{ message.timestamp|date:"g:i A" }}</div>
+                    </div>
+                {% else %}
+                    <div class="message doctor-message">
+                        {{ message.content }}
+                        <div class="message-time">{{ message.timestamp|date:"g:i A" }}</div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <div class="message doctor-message">
+                    Hello! How can I help you today?
+                    <div class="message-time">{% now "g:i A" %}</div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="chat-input">
+                <input type="text" id="messageInput" name="messagebox" placeholder="Type your message here..." required />
+                <button type="submit" class="send-btn">➤</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    </script>
+</body>
+</html>
